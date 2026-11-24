@@ -1,0 +1,34 @@
+{
+  "characters": [
+    {
+      "id": "char_male_lead",
+      "canonical_name": "Nam Chính",
+      "aliases": ["Cố Hải", "A Hải"],
+      "gender": "male",
+      "age": 25,
+      "occupation": "Nhiếp ảnh gia tự do",
+      "personality": "Hài hước, chân thành, đôi khi hơi nhây nhưng quyết đoán khi gặp tình huống gay cấn",
+      "voice_tone": "Khẩu ngữ trẻ trung, phóng khoáng, dùng nhiều từ lóng tự nhiên của thanh niên"
+    },
+    {
+      "id": "char_female_lead_1",
+      "canonical_name": "Triệu Mẫn",
+      "aliases": ["Mẫn Mẫn", "Tổng giám đốc Triệu", "Sếp Triệu"],
+      "gender": "female",
+      "age": 28,
+      "occupation": "Tổng giám đốc công ty truyền thông",
+      "personality": "Sắc sảo, kiêu kỳ, ngoài lạnh trong nóng, giàu có và độc lập",
+      "voice_tone": "Tự tin, đĩnh đạc, thỉnh thoảng trêu chọc đối phương với nụ cười nửa miệng"
+    },
+    {
+      "id": "char_female_lead_2",
+      "canonical_name": "Tiểu Vũ",
+      "aliases": ["Vũ Nhi", "Bé Vũ"],
+      "gender": "female",
+      "age": 21,
+      "occupation": "Thực tập sinh đại học",
+      "personality": "Ngây thơ, hoạt bát, nhiệt tình, có phần hậu đậu đáng yêu",
+      "voice_tone": "Giọng ngọt ngào, nhiều trợ từ nhé/nè/nha, nói nhanh khi bối rối"
+    }
+  ]
+}

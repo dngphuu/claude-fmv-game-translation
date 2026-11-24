@@ -1,0 +1,15 @@
+{
+  "project_name": "fmv-game-title",
+  "display_title": "FMV Game Title",
+  "engine": "unity-fmv",
+  "subtitle_format": "srt",
+  "source_language": "zh",
+  "target_language": "vi-VN",
+  "created_at": "2026-11-24T00:00:00Z",
+  "skill_name": "translate-fmv-vi",
+  "skill_version": "1.0.0",
+  "cps_target": 15.0,
+  "cps_max": 18.0,
+  "cpl_max": 38,
+  "max_lines": 2
+}

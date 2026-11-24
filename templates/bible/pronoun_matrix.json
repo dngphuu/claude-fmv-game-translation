@@ -1,0 +1,37 @@
+{
+  "relationship_rules": [
+    {
+      "pair": ["char_male_lead", "char_female_lead_1"],
+      "phase": "phase_1_office_interview",
+      "speaker_a": "char_male_lead",
+      "speaker_b": "char_female_lead_1",
+      "a_calls_b": "Tổng giám đốc Triệu / Sếp Triệu / chị",
+      "a_calls_self": "tôi / em",
+      "b_calls_a": "cậu Cố / cậu",
+      "b_calls_self": "tôi",
+      "notes": "Quan hệ công sở cấp trên - cấp dưới, giữ khoảng cách lịch sự"
+    },
+    {
+      "pair": ["char_male_lead", "char_female_lead_1"],
+      "phase": "phase_2_dating_romance",
+      "speaker_a": "char_male_lead",
+      "speaker_b": "char_female_lead_1",
+      "a_calls_b": "em / Mẫn Mẫn",
+      "a_calls_self": "anh",
+      "b_calls_a": "anh / Cố Hải",
+      "b_calls_self": "em",
+      "notes": "Quan hệ tình cảm thân mật, hẹn hò lãng mạn"
+    },
+    {
+      "pair": ["char_male_lead", "char_female_lead_2"],
+      "phase": "default",
+      "speaker_a": "char_male_lead",
+      "speaker_b": "char_female_lead_2",
+      "a_calls_b": "em / Tiểu Vũ",
+      "a_calls_self": "anh",
+      "b_calls_a": "anh Cố Hải / anh",
+      "b_calls_self": "em",
+      "notes": "Tiền bối - Hậu bối khóa dưới, xưng hô anh - em tự nhiên"
+    }
+  ]
+}

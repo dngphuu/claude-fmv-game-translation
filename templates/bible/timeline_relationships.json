@@ -1,0 +1,16 @@
+{
+  "routes": {
+    "route_common": {
+      "name": "Tuyến Mở Đầu",
+      "active_phases": {
+        "char_male_lead__char_female_lead_1": "phase_1_office_interview"
+      }
+    },
+    "route_trieu_man": {
+      "name": "Tuyến Triệu Mẫn",
+      "active_phases": {
+        "char_male_lead__char_female_lead_1": "phase_2_dating_romance"
+      }
+    }
+  }
+}

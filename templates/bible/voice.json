@@ -1,0 +1,17 @@
+{
+  "char_male_lead": {
+    "speaking_style": "Khẩu ngữ hiện đại, hóm hỉnh, giàu cảm xúc",
+    "frequent_particles": ["nhé", "nhá", "nè", "đấy", "thôi nào", "chứ"],
+    "anti_slop_notes": "Tránh xưng tôi với người yêu, tránh dịch cứng nhắc"
+  },
+  "char_female_lead_1": {
+    "speaking_style": "Thanh lịch, sắc sảo, dứt khoát",
+    "frequent_particles": ["sao", "đấy chứ", "nào"],
+    "anti_slop_notes": "Không dịch mềm yếu, thể hiện phong thái nữ vương công sở"
+  },
+  "char_female_lead_2": {
+    "speaking_style": "Đáng yêu, nhí nhảnh, ngắt nhịp nhanh",
+    "frequent_particles": ["nè", "nhá", "ạ", "hả anh"],
+    "anti_slop_notes": "Tránh dùng từ ngữ già dặn"
+  }
+}

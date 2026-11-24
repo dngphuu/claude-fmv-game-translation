@@ -1,0 +1,13 @@
+{
+  "name": "translate-fmv-vi",
+  "version": "1.0.0",
+  "description": "FMV (Full Motion Video) Game Localization Skill for Natural Cinematic Vietnamese (Zero AI Slop, CPS limits, Pronoun Matrix, Subtitle round-trip)",
+  "author": "Antigravity & Claude Code Team",
+  "skills": [
+    {
+      "name": "translate-fmv-vi",
+      "path": "skills/translate-fmv-vi/SKILL.md",
+      "description": "Chuyên dịch và bản địa hóa game FMV, phim tương tác thực tế từ tiếng Nhật, Hàn, Trung, Anh sang tiếng Việt tự nhiên chuẩn điện ảnh, không AI slop, kiểm soát tốc độ đọc CPS và bảo toàn phụ đề srt/vtt/ass/json."
+    }
+  ]
+}

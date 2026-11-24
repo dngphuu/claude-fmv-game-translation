@@ -1,0 +1,34 @@
+[
+  {
+    "clip_id": "heist_01",
+    "timestamp_start_ms": 1500,
+    "timestamp_end_ms": 4200,
+    "speaker": "Matt",
+    "dialogue": "Look, if the security guard turns that corner, we're totally screwed.",
+    "is_choice": false
+  },
+  {
+    "clip_id": "heist_02",
+    "timestamp_start_ms": 4500,
+    "timestamp_end_ms": 7100,
+    "speaker": "May-Ling",
+    "dialogue": "Shut up and keep drilling. I told you, I hacked their patrol schedule.",
+    "is_choice": false
+  },
+  {
+    "clip_id": "heist_03",
+    "timestamp_start_ms": 7500,
+    "timestamp_end_ms": 9500,
+    "speaker": "System",
+    "dialogue": "[CHOICE] Tackle the approaching guard",
+    "is_choice": true
+  },
+  {
+    "clip_id": "heist_04",
+    "timestamp_start_ms": 9800,
+    "timestamp_end_ms": 11800,
+    "speaker": "System",
+    "dialogue": "[CHOICE] Hide behind the marble pillar",
+    "is_choice": true
+  }
+]

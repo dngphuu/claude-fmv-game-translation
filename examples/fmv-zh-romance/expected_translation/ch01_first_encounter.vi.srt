@@ -1,0 +1,19 @@
+1
+00:00:03,100 --> 00:00:05,800
+Triệu Mẫn: Cố Hải, ngẩn người gì đấy? Đây là dự án sáp nhập quan trọng nhất năm của tập đoàn đấy.
+
+2
+00:00:06,200 --> 00:00:08,900
+Cố Hải: Báo cáo sếp Triệu, em đâu có xem dự án, em đang ngắm đôi hoa tai của chị... khéo chọn ghê.
+
+3
+00:00:09,300 --> 00:00:11,500
+Triệu Mẫn: Khéo dẻo miệng. Liệu mà làm cho tử tế, hỏng việc xem tôi xử cậu thế nào!
+
+4
+00:00:12,000 --> 00:00:14,200
+[LỰA CHỌN] Hứa hoàn thành nhiệm vụ
+
+5
+00:00:14,500 --> 00:00:16,700
+[LỰA CHỌN] Tiếp tục trêu chọc sếp

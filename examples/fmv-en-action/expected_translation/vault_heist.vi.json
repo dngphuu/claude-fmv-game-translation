@@ -1,0 +1,34 @@
+[
+  {
+    "clip_id": "heist_01",
+    "timestamp_start_ms": 1500,
+    "timestamp_end_ms": 4200,
+    "speaker": "Matt",
+    "dialogue": "Này, bảo vệ mà quẹo qua góc đó là hai đứa mình toi đời đấy!",
+    "is_choice": false
+  },
+  {
+    "clip_id": "heist_02",
+    "timestamp_start_ms": 4500,
+    "timestamp_end_ms": 7100,
+    "speaker": "May-Ling",
+    "dialogue": "Im mồm rồi khoan tiếp đi! Đã bảo là tôi hack được lịch tuần tra rồi mà.",
+    "is_choice": false
+  },
+  {
+    "clip_id": "heist_03",
+    "timestamp_start_ms": 7500,
+    "timestamp_end_ms": 9500,
+    "speaker": "System",
+    "dialogue": "[LỰA CHỌN] Lao vào khống chế bảo vệ",
+    "is_choice": true
+  },
+  {
+    "clip_id": "heist_04",
+    "timestamp_start_ms": 9800,
+    "timestamp_end_ms": 11800,
+    "speaker": "System",
+    "dialogue": "[LỰA CHỌN] Nấp sau cột đá cẩm thạch",
+    "is_choice": true
+  }
+]
