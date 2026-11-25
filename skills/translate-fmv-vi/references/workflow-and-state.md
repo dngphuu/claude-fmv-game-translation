@@ -29,8 +29,9 @@ fmv-project/
 │   ├── voice.json                  # Hướng dẫn khẩu khí từng nhân vật
 │   ├── glossary.tsv                # Từ điển thuật ngữ, địa danh, tên riêng (khóa cứng)
 │   └── version.json                # Phiên bản đóng băng của bộ quy chuẩn
-├── planning/                       # Kế hoạch phân chia công việc theo phân cảnh
-│   ├── jobs.jsonl                  # Danh sách các job dịch kèm phân cảnh và ngân sách token
+├── planning/                       # Kế hoạch phân chia công việc theo phân cảnh (Scenario)
+│   ├── scenarios.json              # Phân tách từng scenario kèm chủ đề, bối cảnh, khóa phase & choice_target
+│   ├── jobs.jsonl                  # Danh sách các job dịch tách rạch ròi theo từng scenario
 │   └── translation-decisions.json  # Quyết định phân công
 ├── contexts/                       # Gói ngữ cảnh tối ưu hóa cho AI Subagents
 │   ├── shared-prefix/              # Tiền tố chung cacheable (Kinh thánh + quy tắc chống slop)

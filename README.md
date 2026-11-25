@@ -46,11 +46,12 @@ skills/translate-fmv-vi/
     ├── build_manifest.py             # SHA-256 source file catalog
     ├── extract_subtitles.py          # Universal parser (SRT/VTT/ASS/JSON/CSV -> source.jsonl)
     ├── export_subtitles.py           # Pristine lossless re-exporter
-    ├── plan_jobs.py                  # Scene & route chunking with context budget
+    ├── plan_scenarios.py             # Segment dialogue into scenarios with locked pronoun phases & choice targets
+    ├── plan_jobs.py                  # Scenario-isolated job chunking with context budget
     ├── build_shared_prefix.py        # Compile frozen Bible into cacheable prompt prefix
-    ├── build_context_bundle.py       # Package preceding/succeeding dialogue & pronoun rules
-    ├── emit_chunk.py                 # Clean LLM translation packet
-    ├── validate_translation.py       # 5-tier validator (IDs, tokens, CPS, AI slop, glossary)
+    ├── build_context_bundle.py       # Package scenario brief, active pronoun locks & choice rules
+    ├── emit_chunk.py                 # Clean scenario-aware LLM translation packet
+    ├── validate_translation.py       # Validator (IDs, tokens, CPS, AI slop/word-by-word, pronoun & choice audit)
     ├── create_review_report.py       # Independent reviewer declaration recorder
     ├── apply_review_delta.py         # Deterministic merge of reviewer improvements
     ├── merge_jobs.py                 # Assemble final approved text & release manifest
@@ -98,7 +99,8 @@ python skills/translate-fmv-vi/scripts/set_stage.py roundtrip-proven --project-d
 # Step 4: Configure Bible (pronoun matrix, character profiles, glossary) & freeze
 python skills/translate-fmv-vi/scripts/set_stage.py bible-frozen --project-dir ./my-game --evidence bible/version.json
 
-# Step 5: Plan jobs & generate context bundles
+# Step 5: Plan scenarios & jobs, then generate context bundles
+python skills/translate-fmv-vi/scripts/plan_scenarios.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/plan_jobs.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/build_shared_prefix.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/build_context_bundle.py --project-dir ./my-game --all-pending

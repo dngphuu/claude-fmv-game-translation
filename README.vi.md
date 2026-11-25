@@ -82,7 +82,8 @@ python skills/translate-fmv-vi/scripts/set_stage.py roundtrip-proven --project-d
 # 4. Tinh chỉnh Kinh thánh (bible/pronoun_matrix.json, bible/glossary.tsv) và đóng băng
 python skills/translate-fmv-vi/scripts/set_stage.py bible-frozen --project-dir ./my-game --evidence bible/version.json
 
-# 5. Lập kế hoạch job theo phân cảnh và đóng gói ngữ cảnh
+# 5. Phân tách từng Scenario, lập kế hoạch job và đóng gói ngữ cảnh
+python skills/translate-fmv-vi/scripts/plan_scenarios.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/plan_jobs.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/build_shared_prefix.py --project-dir ./my-game
 python skills/translate-fmv-vi/scripts/build_context_bundle.py --project-dir ./my-game --all-pending

@@ -1,7 +1,9 @@
 {
+  "protagonist_id": "char_male_lead",
   "characters": [
     {
       "id": "char_male_lead",
+      "is_protagonist": true,
       "canonical_name": "Nam Chính",
       "aliases": ["Cố Hải", "A Hải"],
       "gender": "male",

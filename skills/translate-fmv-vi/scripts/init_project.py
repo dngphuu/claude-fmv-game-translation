@@ -81,10 +81,15 @@ def init_project(
     if not run_state_path.exists():
         atomic_json(run_state_path, run_state)
 
-    # Initialize Bible files from templates if templates exist
-    templates_dir = Path(__file__).resolve().parent.parent.parent.parent / "templates" / "bible"
+    # Initialize Bible files from templates if templates exist in skill or repo ancestors
+    templates_dir = None
+    for ancestor in Path(__file__).resolve().parents:
+        candidate = ancestor / "templates" / "bible"
+        if candidate.is_dir():
+            templates_dir = candidate
+            break
     bible_dir = project_dir / "bible"
-    if templates_dir.exists():
+    if templates_dir is not None:
         for template_file in templates_dir.glob("*"):
             target_file = bible_dir / template_file.name
             if not target_file.exists():

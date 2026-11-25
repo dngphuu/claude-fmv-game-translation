@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
-"""Universal subtitle extractor for FMV game formats (SRT, VTT, ASS, JSON, CSV)."""
+"""Universal subtitle extractor for FMV game formats (SRT, VTT, ASS, JSON)."""
 
 from __future__ import annotations
 
 import argparse
-import csv
 import json
 import re
 from pathlib import Path
@@ -22,16 +21,62 @@ PROTECTED_TOKEN_REGEX = re.compile(
     r"(<[^>]+>|\{\\[^}]+\}|%[0-9]*[sdif]|(?:\{[0-9a-zA-Z_]+\})|\\N|\\n)"
 )
 
+CHOICE_MARKER_REGEX = re.compile(
+    r"^\s*(?:\[(?:QTE(?:_CHOICE_\d+)?|CHOICE(?:_\d+)?|OPTION(?:_\d+)?|LỰA\s*CHỌN)\]|【(?:选项|选择|選択肢|選択)\d*】)",
+    re.IGNORECASE,
+)
+
+SRT_BRACKET_SPEAKER_RE = re.compile(r"^(【([^】]+)】\s*)(.*)", re.DOTALL)
+SRT_COLON_SPEAKER_RE = re.compile(
+    r"^(([A-Za-zÀ-ỹ0-9_\-\.\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+(?:\s+[A-Za-zÀ-ỹ0-9_\-\.\u4e00-\u9fff\u3040-\u30ff\uac00-\ud7af]+){0,3})\s*[:：]\s*)(.*)",
+    re.DOTALL,
+)
+
 
 def extract_protected_tokens(text: str) -> list[str]:
     """Find all markup, styling tags, or variable placeholders."""
     return PROTECTED_TOKEN_REGEX.findall(text)
 
 
+def detect_is_choice(speaker: str, text: str) -> bool:
+    """Detect interactive player choice / QTE cues across subtitle formats."""
+    if CHOICE_MARKER_REGEX.match(text or ""):
+        return True
+    sp_norm = (speaker or "").strip().lower()
+    if re.match(r"^(?:choice\d*|qte\d*|option\d*)$", sp_norm):
+        return True
+    return False
+
+
+def _extract_srt_speaker(raw_text: str) -> tuple[str, str, str]:
+    """Return (speaker, speaker_prefix, dialogue_text) for an SRT cue."""
+    if CHOICE_MARKER_REGEX.match(raw_text):
+        return "", "", raw_text
+
+    bracket_match = SRT_BRACKET_SPEAKER_RE.match(raw_text)
+    if bracket_match:
+        prefix, speaker_name, rest = bracket_match.group(1), bracket_match.group(2).strip(), bracket_match.group(3)
+        return speaker_name, prefix, rest
+
+    colon_match = SRT_COLON_SPEAKER_RE.match(raw_text)
+    if colon_match:
+        prefix = colon_match.group(1)
+        speaker_name = colon_match.group(2).strip()
+        rest = colon_match.group(3)
+        if (
+            len(speaker_name) <= 25
+            and not speaker_name.isdigit()
+            and speaker_name.lower() not in {"http", "https", "ftp"}
+            and not rest.startswith("//")
+        ):
+            return speaker_name, prefix, rest
+
+    return "", "", raw_text
+
+
 def parse_srt(content: str, filename: str) -> list[dict[str, Any]]:
     """Parse SRT content into standard subtitle records."""
     records: list[dict[str, Any]] = []
-    # Normalize line endings
     blocks = re.split(r"\n\s*\n", content.replace("\r\n", "\n").strip())
 
     for block in blocks:
@@ -39,7 +84,6 @@ def parse_srt(content: str, filename: str) -> list[dict[str, Any]]:
         if len(lines) < 2:
             continue
 
-        # Line 0: index or index could be missing if format is loose
         tc_line_idx = 1 if "-->" in lines[1] else 0
         if "-->" not in lines[tc_line_idx]:
             continue
@@ -54,21 +98,14 @@ def parse_srt(content: str, filename: str) -> list[dict[str, Any]]:
         end_ms = timecode_to_ms(end_tc)
         duration_ms = max(0, end_ms - start_ms)
 
-        # Dialogue text
-        text_lines = lines[tc_line_idx + 1 :]
-        text = "\n".join(text_lines)
-
-        # Detect speaker if in format "Speaker: dialogue" or "【Speaker】dialogue"
-        speaker = ""
-        speaker_match = re.match(r"^(?:【([^】]+)】|([^\s:：]{1,15})[:：])\s*(.*)", text, re.DOTALL)
-        if speaker_match:
-            speaker = speaker_match.group(1) or speaker_match.group(2)
-            text = speaker_match.group(3)
+        raw_text = "\n".join(lines[tc_line_idx + 1 :])
+        speaker, speaker_prefix, text = _extract_srt_speaker(raw_text)
+        is_choice = detect_is_choice(speaker, text)
 
         idx = len(records) + 1
         entry_id = f"{filename}:{idx:06d}"
 
-        records.append({
+        record: dict[str, Any] = {
             "id": entry_id,
             "source_hash": digest_text(text),
             "file": filename,
@@ -83,8 +120,12 @@ def parse_srt(content: str, filename: str) -> list[dict[str, Any]]:
             "scene_id": Path(filename).stem,
             "text": text,
             "protected_tokens": extract_protected_tokens(text),
-            "is_choice": False,
-        })
+            "is_choice": is_choice,
+        }
+        if speaker_prefix:
+            record["speaker_prefix"] = speaker_prefix
+
+        records.append(record)
 
     return records
 
@@ -94,7 +135,6 @@ def parse_vtt(content: str, filename: str) -> list[dict[str, Any]]:
     records: list[dict[str, Any]] = []
     lines = content.replace("\r\n", "\n").split("\n")
     i = 0
-    # Skip WEBVTT header
     while i < len(lines) and not lines[i].startswith("WEBVTT"):
         i += 1
     if i < len(lines):
@@ -132,12 +172,12 @@ def parse_vtt(content: str, filename: str) -> list[dict[str, Any]]:
             continue
 
         start_tc, end_tc = tc_match.group(1), tc_match.group(2)
+        cue_settings = tc_line[tc_match.end():].strip()
         start_ms = timecode_to_ms(start_tc)
         end_ms = timecode_to_ms(end_tc)
         duration_ms = max(0, end_ms - start_ms)
 
         raw_text = "\n".join(text_lines)
-        # Check for <v Speaker> voice tags
         speaker = ""
         v_match = re.match(r"^<v\s+([^>]+)>(.*)", raw_text, re.DOTALL)
         if v_match:
@@ -146,10 +186,11 @@ def parse_vtt(content: str, filename: str) -> list[dict[str, Any]]:
         else:
             text = raw_text
 
+        is_choice = detect_is_choice(speaker, text)
         idx = len(records) + 1
         entry_id = f"{filename}:{idx:06d}"
 
-        records.append({
+        record: dict[str, Any] = {
             "id": entry_id,
             "source_hash": digest_text(text),
             "file": filename,
@@ -164,8 +205,11 @@ def parse_vtt(content: str, filename: str) -> list[dict[str, Any]]:
             "scene_id": Path(filename).stem,
             "text": text,
             "protected_tokens": extract_protected_tokens(text),
-            "is_choice": False,
-        })
+            "is_choice": is_choice,
+        }
+        if cue_settings:
+            record["vtt_settings"] = cue_settings
+        records.append(record)
 
     return records
 
@@ -194,14 +238,15 @@ def parse_ass(content: str, filename: str) -> list[dict[str, Any]]:
             raw_data = line_s[9:].split(",", len(format_fields) - 1)
             event_dict = dict(zip(format_fields, raw_data))
 
-            start_tc = event_dict.get("start", "0:00:00.00")
-            end_tc = event_dict.get("end", "0:00:00.00")
+            start_tc = event_dict.get("start", "0:00:00.00").strip()
+            end_tc = event_dict.get("end", "0:00:00.00").strip()
             start_ms = timecode_to_ms(start_tc)
             end_ms = timecode_to_ms(end_tc)
             duration_ms = max(0, end_ms - start_ms)
 
-            speaker = event_dict.get("name", "")
+            speaker = event_dict.get("name", "").strip()
             text = event_dict.get("text", "")
+            is_choice = detect_is_choice(speaker, text)
 
             idx = len(records) + 1
             entry_id = f"{filename}:{idx:06d}"
@@ -221,15 +266,15 @@ def parse_ass(content: str, filename: str) -> list[dict[str, Any]]:
                 "scene_id": Path(filename).stem,
                 "text": text,
                 "protected_tokens": extract_protected_tokens(text),
-                "is_choice": False,
-                "ass_style": event_dict.get("style", "Default"),
+                "is_choice": is_choice,
+                "ass_style": event_dict.get("style", "Default").strip(),
             })
 
     return records
 
 
 def parse_json_table(content: str, filename: str) -> list[dict[str, Any]]:
-    """Parse game engine JSON dialogue arrays."""
+    """Parse game engine JSON dialogue arrays, preserving optional scenario metadata."""
     data = json.loads(content)
     if isinstance(data, dict) and "dialogues" in data:
         items = data["dialogues"]
@@ -239,16 +284,21 @@ def parse_json_table(content: str, filename: str) -> list[dict[str, Any]]:
         raise ValueError(f"Unsupported JSON structure in {filename}")
 
     records: list[dict[str, Any]] = []
+    optional_keys = (
+        "clip_id", "scenario_id", "addressee", "choice_target",
+        "topic", "setting", "mood", "relationship_phase",
+    )
+
     for idx, item in enumerate(items, 1):
         text = item.get("text") or item.get("dialogue") or item.get("content") or ""
         start_ms = int(item.get("start_ms") or item.get("timestamp_start_ms") or 0)
         end_ms = int(item.get("end_ms") or item.get("timestamp_end_ms") or 0)
         duration_ms = max(0, end_ms - start_ms)
         speaker = item.get("speaker") or item.get("name") or ""
-        is_choice = bool(item.get("is_choice") or item.get("choice"))
+        is_choice = bool(item.get("is_choice") or item.get("choice")) or detect_is_choice(speaker, text)
 
         entry_id = f"{filename}:{idx:06d}"
-        records.append({
+        record: dict[str, Any] = {
             "id": entry_id,
             "source_hash": digest_text(text),
             "file": filename,
@@ -264,7 +314,12 @@ def parse_json_table(content: str, filename: str) -> list[dict[str, Any]]:
             "text": text,
             "protected_tokens": extract_protected_tokens(text),
             "is_choice": is_choice,
-        })
+        }
+        for key in optional_keys:
+            if item.get(key) is not None:
+                record[key] = item[key]
+
+        records.append(record)
 
     return records
 
@@ -303,14 +358,12 @@ def extract_all(project_dir: Path) -> list[dict[str, Any]]:
     source_jsonl_path = extracted_dir / "source.jsonl"
     write_jsonl(source_jsonl_path, all_records)
 
-    # Control token report
     token_report_path = extracted_dir / "control-token-report.json"
     atomic_json(token_report_path, {
         "tokens_detected": sorted(tokens_found),
         "total_tokens": len(tokens_found),
     })
 
-    # Script map
     scenes = sorted({r.get("scene_id", "default") for r in all_records})
     script_map_path = extracted_dir / "script-map.json"
     atomic_json(script_map_path, {

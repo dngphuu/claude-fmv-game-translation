@@ -4,12 +4,12 @@
 Mục tiêu là dịch phụ đề game FMV sang tiếng Việt tự nhiên, chuẩn điện ảnh, truyền cảm, khớp khẩu khí diễn viên và tuân thủ nghiêm ngặt định mức thời gian hiển thị (CPS).
 
 Thứ tự ưu tiên khi chuyển ngữ:
-1. **Tính chính xác về logic, sự thật cốt truyện, quan hệ nhân quả và dòng thời gian.**
-2. **Đại từ nhân xưng chuẩn xác tuyệt đối theo Ma trận Quan hệ Nhân vật (Pronoun Matrix).**
-3. **Khẩu khí tự nhiên của diễn viên, cảm xúc, ngữ điệu và bối cảnh hiện trường.**
+1. **Tính chính xác về logic, sự thật cốt truyện, quan hệ nhân quả và bối cảnh Scenario.**
+2. **Đại từ nhân xưng chuẩn xác tuyệt đối theo Khóa Xưng Hô từng phân cảnh (`directional_pronoun_locks`), bao gồm cả các nút lựa chọn (`is_choice`) đứng từ góc nhìn Nhân vật chính.**
+3. **Khẩu khí tự nhiên của diễn viên đúng với chủ đề cuộc trò chuyện trong Scenario, cảm xúc và ngữ điệu.**
 4. **Ràng buộc thời lượng đọc (CPS < 18, không vượt quá giới hạn mắt người đọc).**
 5. **Cấu trúc ngữ pháp tiếng Việt mượt mà (Anti-AI-Slop).**
-6. **Hình thức câu chữ bề mặt của tiếng gốc (Ưu tiên cuối cùng - không dịch từng từ một word-by-word).**
+6. **Hình thức câu chữ bề mặt của tiếng gốc (Ưu tiên cuối cùng - tuyệt đối không dịch word-by-word).**
 
 ---
 
@@ -54,9 +54,10 @@ Nếu phát hiện vấn đề cần biên tập viên lưu ý hoặc đề xu�
 ---
 
 ## 4. Bảng Kiểm Tra Trước Khi Trả Kết Quả (Self-Check Checklist)
-Trước khi xuất kết quả dịch của một phân đoạn:
-1. Đã đối chiếu đúng xưng hô trong `bible/pronoun_matrix.json` cho cảnh này chưa?
-2. Có từ nào thuộc danh sách "AI Slop" không (Ví dụ: "Tôi - Bạn", "bị/được" bừa bãi, "chết tiệt", "một cách...")?
-3. Đã tính nhẩm CPS chưa? Nếu thời lượng ngắn mà câu dịch dài, người chơi có đọc kịp không?
-4. Đọc nhẩm thành tiếng bằng miệng: Nghe có giống diễn viên phim điện ảnh đang nói không?
-5. Các thẻ biến số, mã định dạng có nguyên vẹn không?
+Trước khi xuất kết quả dịch của một phân đoạn (Scenario):
+1. Đã đọc toàn bộ Scenario Brief (bối cảnh, chủ đề, tâm lý, quan hệ) trước khi dịch từng câu chưa?
+2. Từng câu thoại (và từng dòng `[IS_CHOICE]` từ góc nhìn Nhân vật chính hướng tới `choice_target`) đã khớp 100% với `directional_pronoun_locks` của phân cảnh này chưa?
+3. Có tàn dư dịch máy word-by-word hoặc AI Slop không (Ví dụ: "Tôi - Bạn", "bị/được" bừa bãi, "nghĩ rằng", "điều đó có nghĩa là", "một cách...")?
+4. Đã tính nhẩm CPS chưa? Nếu thời lượng ngắn mà câu dịch dài, người chơi có đọc kịp không?
+5. Đọc nhẩm thành tiếng bằng miệng: Nghe có giống diễn viên phim điện ảnh Việt Nam đang nói đúng chủ đề đó không?
+6. Các thẻ biến số, mã định dạng có nguyên vẹn không?

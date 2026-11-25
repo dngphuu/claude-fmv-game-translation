@@ -78,7 +78,29 @@ Trợ từ cuối câu là linh hồn biến câu văn dịch thành lời nói 
 
 ---
 
-## 4. Kiểm Thử Khẩu Âm (Read-Aloud Test)
+## 4. Khử Dịch Máy Word-by-Word Theo Scenario (De-verbalization)
+> **"Không dịch từng chữ bề mặt — hãy hình dung phân cảnh (Scenario) đang nói về chủ đề gì rồi viết lại câu người Việt thật sẽ nói trong tình huống đó."**
+
+### Quy trình 3 bước tránh dịch máy Word-by-Word:
+1. **Xác định ý định phát ngôn (Intent)**: Nhân vật nói câu này để trách móc, trêu chọc, nũng nịu, dò xét hay ra lệnh?
+2. **Bỏ khung ngữ pháp gốc (Drop Source Syntax)**: Đừng giữ nguyên thứ tự mệnh đề hoặc hư từ thừa (*"What I mean is..."*, *"I think that..."*, *"Let me..."*, *"那个……其实我是想说"*).
+3. **Diễn đạt tự nhiên theo đúng chủ đề Scenario**:
+   - ❌ *"Điều đó có nghĩa là anh không tin tôi sao?"* -> ✔️ *"Ý anh là không tin em chứ gì?"* (Cảnh đôi lứa hờn dỗi)
+   - ❌ *"Tôi nghĩ rằng chúng ta nên rời khỏi đây một cách nhanh chóng."* -> ✔️ *"Chỗ này không ổn đâu, chuồn lẹ thôi!"* (Cảnh hành động trốn thoát)
+   - ❌ *"Những gì tôi muốn nói là cảm ơn bạn vì đã giúp tôi."* -> ✔️ *"Nói thật là cảm ơn sếp nhiều lắm, không có chị thì em toi rồi."* (Cảnh công sở cấp dưới cảm ơn sếp)
+   - ❌ *"Bạn có ổn không? Có vấn đề gì sai với bạn vậy?"* -> ✔️ *"Này, sao thế? Mặt cắt không còn giọt máu vậy?"* (Cảnh bạn thân lo lắng)
+
+### Nguyên tắc Vàng cho Lựa Chọn Tương Tác (`is_choice`) của Nhân Vật Chính:
+Mọi lựa chọn đều xuất phát từ **Nhân vật chính** đối diện với người đang nói chuyện cùng trong Scenario:
+- ❌ `[CHOICE] Tell her the truth` -> *"Nói thật với bạn"* / *"Nói thật với cô ta"*
+- ✔️ (Nếu đang là cấp dưới nói với sếp nữ): *"Nói thật với sếp"* / *"Thú nhận với chị ấy"*
+- ✔️ (Nếu đang yêu nhau): *"Nói thật với em ấy"* / *"Khai hết với Mẫn Mẫn"*
+- ❌ `[CHOICE] I didn't mean it` -> *"Tôi không cố ý"* (khi hai người đang xưng `anh - em`)
+- ✔️ *"Anh không cố ý mà"*
+
+---
+
+## 5. Kiểm Thử Khẩu Âm (Read-Aloud Test)
 Quy tắc bất di bất dịch cho biên dịch viên và kiểm duyệt viên:
 > **"Trước khi duyệt một câu dịch, hãy đọc to câu đó bằng miệng theo đúng tốc độ diễn xuất của nhân vật trong video."**
 - Nếu đọc lên thấy vấp môi, trẹo hàm, hoặc nghe như đang đọc báo -> **Dịch lại ngay lập tức!**

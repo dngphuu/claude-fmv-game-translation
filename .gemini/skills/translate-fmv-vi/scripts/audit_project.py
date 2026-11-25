@@ -90,8 +90,13 @@ def audit_stage_evidence(project_dir: Path, target_stage: str) -> tuple[bool, st
         if not qa_file.exists():
             return False, "Missing qa/validation-report.json"
         report = read_json(qa_file)
-        if report.get("errors", 0) > 0:
-            return False, f"Validation report contains {report['errors']} errors"
+        raw_errors = report.get("errors", 0)
+        error_count = report.get(
+            "error_count",
+            len(raw_errors) if isinstance(raw_errors, list) else int(raw_errors or 0),
+        )
+        if error_count > 0:
+            return False, f"Validation report contains {error_count} errors"
         return True, "Validation passed with 0 errors"
 
     if target_stage == "repacked":

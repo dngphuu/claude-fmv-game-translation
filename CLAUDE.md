@@ -33,7 +33,8 @@ python skills/translate-fmv-vi/scripts/extract_subtitles.py --project-dir ./my-p
 python skills/translate-fmv-vi/scripts/export_subtitles.py --project-dir ./my-project --dry-run
 python skills/translate-fmv-vi/scripts/set_stage.py roundtrip-proven --project-dir ./my-project --evidence staging/roundtrip/roundtrip-proven.json
 
-# 4. Plan jobs & Build shared prefix
+# 4. Plan scenarios, jobs & Build shared prefix
+python skills/translate-fmv-vi/scripts/plan_scenarios.py --project-dir ./my-project
 python skills/translate-fmv-vi/scripts/plan_jobs.py --project-dir ./my-project
 python skills/translate-fmv-vi/scripts/build_shared_prefix.py --project-dir ./my-project
 python skills/translate-fmv-vi/scripts/build_context_bundle.py --project-dir ./my-project --all-pending

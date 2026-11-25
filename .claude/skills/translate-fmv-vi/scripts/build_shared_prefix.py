@@ -17,24 +17,32 @@ def build_shared_prefix(project_dir: Path) -> str:
     prefix_dir = project_dir / "contexts" / "shared-prefix"
     prefix_dir.mkdir(parents=True, exist_ok=True)
 
-    # Collect project metadata
     project_json = read_json(project_dir / "project.json")
     world_md = read_text(bible_dir / "world.md") if (bible_dir / "world.md").exists() else ""
     characters = read_json(bible_dir / "characters.json") if (bible_dir / "characters.json").exists() else {}
     pronoun_matrix = read_json(bible_dir / "pronoun_matrix.json") if (bible_dir / "pronoun_matrix.json").exists() else {}
+    timeline = read_json(bible_dir / "timeline_relationships.json") if (bible_dir / "timeline_relationships.json").exists() else {}
     voice = read_json(bible_dir / "voice.json") if (bible_dir / "voice.json").exists() else {}
     glossary = read_tsv(bible_dir / "glossary.tsv") if (bible_dir / "glossary.tsv").exists() else []
 
-    # Read the Vietnamese Natural Voice Guide from references
     ref_voice_guide = Path(__file__).resolve().parent.parent / "references" / "vietnamese-natural-voice-guide.md"
     anti_slop_summary = ""
     if ref_voice_guide.exists():
         anti_slop_summary = read_text(ref_voice_guide)
 
+    scenario_rules = "\n".join([
+        "1. **Dịch theo Scenario & Chủ đề hội thoại (Scenario-First, Anti-Word-by-Word)**: Trước khi dịch từng dòng, luôn đọc Scenario Brief (bối cảnh, chủ đề, tâm lý, mối quan hệ) để hiểu ý đồ giao tiếp. Chuyển hóa trọn vẹn ý nghĩa sang khẩu ngữ Việt tự nhiên, tuyệt đối không dịch đối xứng từng chữ (word-by-word).",
+        "2. **Tuân thủ Khóa Xưng Hô từng Phân Cảnh (Active Pronoun Lock)**: Mỗi phân cảnh chỉ kích hoạt MỘT giai đoạn quan hệ cho từng cặp nhân vật. Không trộn lẫn xưng hô giữa các giai đoạn khác nhau và tuyệt đối không nhảy sang 'Tôi - Bạn'.",
+        "3. **Các Lựa Chọn (`is_choice`) Là Của Nhân Vật Chính**: Mọi nút bấm lựa chọn đều xuất phát từ góc nhìn và hành động của Nhân vật chính (Protagonist) hướng tới nhân vật đối diện trong phân cảnh. Phải giữ đúng vai vế xưng hô của nhân vật chính với người đó.",
+    ])
+
     sections = [
         "# DỰ ÁN VIỆT HÓA GAME FMV: QUY TẮC CỐT LÕI & TIỀN TỐ BẢN DỊCH",
         f"**Tựa game**: {project_json.get('display_title')} | Cặp ngôn ngữ: {project_json.get('source_language')} -> {project_json.get('target_language')}",
         f"**Định mức CPS mục tiêu**: {project_json.get('cps_target', 15.0)} chars/sec (Tối đa: {project_json.get('cps_max', 18.0)})",
+        "",
+        "## NGUYÊN TẮC DỊCH THEO PHÂN CẢNH & LỰA CHỌN",
+        scenario_rules,
         "",
         "## BỐI CẢNH TÁC PHẨM",
         world_md.strip(),
@@ -44,6 +52,9 @@ def build_shared_prefix(project_dir: Path) -> str:
         "",
         "## MA TRẬN XƯNG HÔ TIẾNG VIỆT (PRONOUN MATRIX)",
         json.dumps(pronoun_matrix, indent=2, ensure_ascii=False),
+        "",
+        "## TIẾN TRÌNH QUAN HỆ THEO TUYẾN TRUYỆN (TIMELINE)",
+        json.dumps(timeline, indent=2, ensure_ascii=False),
         "",
         "## HƯỚNG DẪN GIỌNG ĐIỆU NHÂN VẬT (VOICE)",
         json.dumps(voice, indent=2, ensure_ascii=False),
